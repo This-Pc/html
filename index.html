@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to right, #4e54c8, #8f94fb);
+            height: 100vh;
+            margin: 0;
+            background-attachment: fixed;
+        }
+
+        h1 {
+            color: white;
+            font-size: 4rem;
+        }
+
+        p{
+          color: white;
+          font-size: 2rem;
+          font-weight: 600;
+        }
+
+        #guessInput{
+          padding: 20px;
+          font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+          font-size: 4rem;
+        }
+
+        button {
+            background-color: white;
+            color: black;
+            font-size: 24px;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            border: none;
+            border-radius: 16px;
+        }
+
+        button:hover {
+            background-color: #f1f1f1;
+        }
+
+        #result {
+            color: white;
+            font-size: 24px;
+        }
+
+        #resetBtn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        #correctAnswer{
+            color: white;
+            font-size: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Number Guessing Game</h1>
+    <p>Guess a number between 1 and 100:</p>
+    <p id="attempts">Attempts remaining : 7</p>
+    <input type="number" id="guessInput" min="1" max="100">
+    <button onclick="guess()">Submit Guess</button>
+    <p id="result"></p>
+    <p id="correctAnswer"></p>
+    <script>
+        let gameOver = new Audio('./sounds/gameOver.mp3');
+        let wrongInput = new Audio('./sounds/wrongInput.mp3');
+        let gameWon = new Audio('./sounds/gameWin.mp3');
+        let attempts = 7;
+
+        function generateRandomNumber() {
+            let excludedValues = [1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+            let randomNumber;
+
+            do {
+                randomNumber = Math.floor(Math.random() * 100) + 1;
+            } while (excludedValues.includes(randomNumber));
+
+            return randomNumber;
+        }
+
+        let randomNumber = generateRandomNumber();
+
+        function guess() {
+            let guess = document.getElementById('guessInput').value;
+
+            if (attempts <= 0) {
+                document.getElementById("guessInput").disabled = true;
+                document.getElementById('result').innerHTML = 'Game over!';
+                document.getElementById('correctAnswer').innerHTML = 'The correct answer was ' + randomNumber;
+                gameOver.load();
+                gameOver.play();
+            } else {
+                attempts--;
+
+                if (guess < randomNumber) {
+                    document.getElementById('result').innerHTML = 'Your guess is low! Try again.';
+                    wrongInput.load();
+                    wrongInput.play();
+                } else if (guess > randomNumber) {
+                    document.getElementById('result').innerHTML = 'Your guess is high! Try again.';
+                    wrongInput.load();
+                    wrongInput.play();
+                } else {
+                    document.getElementById('result').innerHTML = 'Congratulations! You guessed the correct number!';
+                    gameWon.load();
+                    gameWon.play();
+                }
+            }
+
+            document.getElementById('attempts').innerHTML = 'Attempts remaining: ' + attempts;
+        }
+    </script>
+</body>
+</html>
